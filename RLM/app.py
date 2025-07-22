@@ -1,5 +1,5 @@
 
-# ejemplo de regresion simple
+# ejemplo de regresion multiple
 
 # importacion de librerias
 
@@ -72,4 +72,25 @@ comparison_table = pd.DataFrame({
 })
 
 print(comparison_table.head(20)) # se imprimen los primeros datos
+
+# dibujo de la recta obtenida por regresión lineal y los datos
+
+plt.scatter(X_test,Y_test,color='gray')
+plt.plot(X_test,Y_pred,color='red',linewidth=2)
+plt.title('Temperatura mínima vs Temperatura máxima')  
+plt.xlabel('Temperatura mínima')  
+plt.ylabel('Temperatura máxima')
+plt.show()
+
+# cálculo de las métricas
+
+print('Error absoluto medio:',metrics.mean_absolute_error(Y_test,Y_pred))
+print('Error cuadrático medio:',metrics.mean_squared_error(Y_test,Y_pred))
+print('Raiz del error cuadratico medio:',np.sqrt(metrics.mean_squared_error(Y_test,Y_pred)))
+print('Coeficiente de correlación:',metrics.r2_score(Y_test,Y_pred))
+
+
+
+
+
 
