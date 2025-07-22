@@ -15,7 +15,7 @@ from sklearn import metrics
 
 
 # leemos los datos del archivo
-dataset=pd.read_csv('winequality-red.csv')
+dataset=pd.read_csv('data.csv')
 
 # observamos los datos
 muestras,features=dataset.shape
@@ -31,7 +31,7 @@ print(resumen_estadistico.iloc[0:13])
 # regresion lineal simple
 
 # Toma de las variables de entrada X y salida Y
-X = dataset[['MinTemp']]
+X = dataset['MinTemp']
 Y = dataset['MaxTemp']
 
 # Visuali<acion de los datos 

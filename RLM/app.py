@@ -15,82 +15,45 @@ from sklearn import metrics
 
 
 # leemos los datos del archivo
-dataset=pd.read_csv('data.csv')
+dataset=pd.read_csv('winequality-red.csv')
 
-# observamos los datos
-muestras,features=dataset.shape
+# limpiamos el dataset de valores NaN
+dataset.dropna(inplace=True)
 
-# Obtenemos la información estadistica de cada feature
-resumen_estadistico=dataset.describe().T.round(2)
-print(resumen_estadistico.iloc[2:4]) 
 
-# guardado del resumen estadistico (opcional)
-#filename = 'resumen_estadistico.csv'
-#resumen_estadistico.to_csv(filename, index=True)
+# informacion estadistica de las variables
+info_estadistica=dataset.describe()
+print(info_estadistica)
 
-# regresion lineal simple
 
-# Toma de las variables de entrada X y salida Y
-X = dataset[['MinTemp']]
-Y = dataset['MaxTemp']
+# Capture column names
+variables = dataset.columns.tolist()
+#print('Variables en el dataset:')
+#print(variables)
 
-# Visuali<acion de los datos 
+# asignacion de variables
+X = dataset.drop('quality', axis=1)   # todas las columnas menos 'quality'
+Y = dataset['quality']                # la columna objetivo
 
-dataset.plot(x='MinTemp', y='MaxTemp', style='o')  
-plt.title('Temperatura mínima vs Temperatura máxima')  
-plt.xlabel('Temperatura mínima')  
-plt.ylabel('Temperatura máxima')
-plt.legend(loc="lower right", title="Temperatura Máxima") 
-plt.show()
-
-# dividimos los datos en un 80% de entranamiento y un 20% de comprobación
+# dividimos los conjuntos de datos
+# dividimos los datos en un 80% de entrenamiento y un 20% de comprobación
 X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.2,random_state=0)
 
 # Creamos el modelo de regresion lineal
 
 regressor=LinearRegression()
-
 regressor.fit(X_train,Y_train) # con el conjunto de datos de entrenamiento
 
+# comprobacion de los coeficienets con cada una de las variables
+coef_lineales = pd.DataFrame({'Coeficientes más óptimos': regressor.coef_}, index=X.columns)
+print(coef_lineales)
 
-# obtencion de los paráemtros de la recta de regresión
-print('Termino independiente %.3f'%regressor.intercept_)
-print('Termino pendiente de la recta %.3f'%regressor.coef_[0])
-
-# predicciones del modelo
-
+# predicción sobre el conjunto de prueba
 Y_pred=regressor.predict(X_test)
-Y_test=Y_test.to_numpy()
 
-# Comparacion de los valores 
-
-comparison_table = pd.DataFrame({
-    'MinTemp': X_test['MinTemp'].to_numpy(),
-    'Actual_MaxTemp': Y_test,
-    'Prediccion_MaxTemp': Y_pred,
-    'Error absoluto': Y_test - Y_pred
-})
-
-print(comparison_table.head(20)) # se imprimen los primeros datos
-
-# dibujo de la recta obtenida por regresión lineal y los datos
-
-plt.scatter(X_test,Y_test,color='gray')
-plt.plot(X_test,Y_pred,color='red',linewidth=2)
-plt.title('Temperatura mínima vs Temperatura máxima')  
-plt.xlabel('Temperatura mínima')  
-plt.ylabel('Temperatura máxima')
-plt.show()
-
-# cálculo de las métricas
-
-print('Error absoluto medio:',metrics.mean_absolute_error(Y_test,Y_pred))
-print('Error cuadrático medio:',metrics.mean_squared_error(Y_test,Y_pred))
-print('Raiz del error cuadratico medio:',np.sqrt(metrics.mean_squared_error(Y_test,Y_pred)))
-print('Coeficiente de correlación:',metrics.r2_score(Y_test,Y_pred))
-
-
-
+# diferencia entre el valor predicho y el real
+df=pd.DataFrame({'Dato':Y_test,'Predicción':Y_pred})
+print(df.head(50)) # primeros valores
 
 
 
