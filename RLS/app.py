@@ -31,7 +31,8 @@ print(resumen_estadistico.iloc[0:13])
 # regresion lineal simple
 
 # Toma de las variables de entrada X y salida Y
-X = dataset['MinTemp']
+X = dataset[['MinTemp']] 
+# scikit-learn exige que la matriz de entrada X sea bidimensional (n filas × n columnas), aun cuando solo tengas una característica:
 Y = dataset['MaxTemp']
 
 # Visuali<acion de los datos 
@@ -84,10 +85,23 @@ plt.show()
 
 # cálculo de las métricas
 
-print('Error absoluto medio:',metrics.mean_absolute_error(Y_test,Y_pred))
-print('Error cuadrático medio:',metrics.mean_squared_error(Y_test,Y_pred))
-print('Raiz del error cuadratico medio:',np.sqrt(metrics.mean_squared_error(Y_test,Y_pred)))
-print('Coeficiente de correlación:',metrics.r2_score(Y_test,Y_pred))
+# valores de control
+Y_promedio=np.mean(Y)
+raiz_ECM=np.sqrt(metrics.mean_squared_error(Y_test, Y_pred)) # raiz del error cuadratico medio
+
+
+print('Promedio de Y',np.mean(Y))
+print('Error Absoluto Medio:',metrics.mean_absolute_error(Y_test, Y_pred)) 
+print('Error Cuadratico Medio:', metrics.mean_squared_error(Y_test, Y_pred)) 
+print('Raíz del error cuadrático medio:',raiz_ECM )
+print('Coeficidiente de correlación:', metrics.r2_score(Y_test,Y_pred))
+
+
+# control de prediccion
+if (raiz_ECM>=0.1*Y_promedio):
+    print("El ajuste no se considera bueno, la raiz del error cuadrático medio es mayor el 10 % del la media de variable predicha")
+else:
+    print('El ajuste se considera bueno')
 
 
 

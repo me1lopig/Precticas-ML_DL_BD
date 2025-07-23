@@ -52,8 +52,24 @@ print(coef_lineales)
 Y_pred=regressor.predict(X_test)
 
 # diferencia entre el valor predicho y el real
-df=pd.DataFrame({'Dato':Y_test,'Predicción':Y_pred})
-print(df.head(50)) # primeros valores
+#df=pd.DataFrame({'Dato':Y_test,'Predicción':Y_pred})
+#print(df.head(50)) # primeros valores
+
+# valores de control
+Y_promedio=np.mean(Y)
+raiz_ECM=np.sqrt(metrics.mean_squared_error(Y_test, Y_pred)) # raiz del error cuadratico medio
 
 
+# Metricas de la regresión
+print('Promedio de Y',np.mean(Y))
+print('Error Absoluto Medio:',metrics.mean_absolute_error(Y_test, Y_pred)) 
+print('Error Cuadratico Medio:', metrics.mean_squared_error(Y_test, Y_pred)) 
+print('Raíz del error cuadrático medio:',raiz_ECM )
+print('Coeficidiente de correlación:', metrics.r2_score(Y_test,Y_pred))
 
+
+# control de prediccion
+if (raiz_ECM>=0.1*Y_promedio):
+    print("El ajuste no se considera bueno, la raiz del error cuadrático medio es mayor el 10 % del la media de variable predicha")
+else:
+    print('El ajuste se considera bueno')
