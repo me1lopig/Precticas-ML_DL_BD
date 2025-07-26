@@ -1,0 +1,81 @@
+
+% Logistic Regression Demo: Documentation
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\title{Análisis del Script de Regresión Logística en Python}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introducción}
+Este documento describe paso a paso el funcionamiento de un script de Python que genera datos sintéticos, entrena un modelo de regresión logística y visualiza los resultados. El objetivo es ilustrar el proceso de clasificación binaria con un ejemplo sencillo.
+
+\section{Dependencias}
+El script utiliza los siguientes paquetes:
+\begin{itemize}
+  \item \textbf{NumPy}: generación y manipulación de arreglos numéricos.
+  \item \textbf{Matplotlib}: creación de gráficos.
+  \item \textbf{Scikit\nobreakdash-learn}: implementación de la regresión logística.
+  \item \textbf{SciPy}: función \textit{sigmoid} (\texttt{expit}).
+\end{itemize}
+
+\section{Generación de Datos}
+\begin{verbatim}
+np.random.seed(0)
+X = np.random.normal(size=n_samples)
+y = (X > 0).astype(float)
+X[X > 0] *= 4
+X += 0.3 * np.random.normal(size=n_samples)
+X = X[:, np.newaxis]
+\end{verbatim}
+Se generan 100 muestras de una distribución normal estándar. La etiqueta $y$ vale 1 cuando la característica $X > 0$; de lo contrario, vale 0. Posteriormente, los valores positivos se escalan por 4 y se añade ruido gaussiano ($\sigma = 0.3$). Finalmente, \texttt{X} se convierte en un vector columna.
+
+\section{Definición y Entrenamiento del Modelo}
+\begin{verbatim}
+regresor = linear_model.LogisticRegression(C=1e5)
+regresor.fit(X, y)
+\end{verbatim}
+Se construye un modelo de regresión logística con regularización mínima ($C = 10^{5}$) y se ajusta a los datos generados.
+
+\section{Visualización de Resultados}
+\begin{verbatim}
+X_test = np.linspace(-5, 10, 300)
+loss = expit(X_test * regresor.coef_ + regresor.intercept_)
+\end{verbatim}
+Se crea un conjunto de valores de prueba \texttt{X\_test} para dibujar la curva sigmoide de probabilidad:
+\begin{equation}
+\sigma(z) = \frac{1}{1 + e^{-z}}.
+\end{equation}
+Además, se representan los puntos originales (etiquetas 0/1) y la curva en color rojo.
+
+\section{Evaluación Rápida}
+El script imprime la precisión obtenida sobre el propio conjunto de entrenamiento:
+\begin{verbatim}
+Precisión en entrenamiento: 0.96
+\end{verbatim}
+\vspace{1em}
+Esto indica que el modelo clasifica correctamente el 96\% de las muestras.
+
+\section{Posibles Mejoras}
+\begin{itemize}
+  \item Utilizar clases de Scikit\nobreakdash-learn para separar datos de entrenamiento y prueba.
+  \item Ajustar el parámetro de regularización $C$ para evitar sobreajuste.
+  \item Añadir métricas como la matriz de confusión o el ROC\nobreakdash\-AUC.
+  \item Guardar la figura como archivo externo (PDF/PNG) e incluirla en este documento.
+\end{itemize}
+
+\section{Conclusiones}
+El ejemplo demuestra cómo:
+\begin{enumerate}
+  \item Generar un conjunto de datos sintéticos 1\nobreakdash-D con una frontera de decisión no trivial.
+  \item Entrenar un modelo de regresión logística con Scikit\nobreakdash-learn.
+  \item Visualizar los resultados mediante Matplotlib, mostrando tanto los datos como la curva sigmoide que modela la probabilidad de pertenencia a la clase positiva.
+\end{enumerate}
+
+\end{document}
